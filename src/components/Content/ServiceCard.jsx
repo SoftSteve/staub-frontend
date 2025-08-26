@@ -31,7 +31,7 @@ const services = [
     image: "service-kitchen.jpg",
   },
   {
-    title: "Fences",
+    title: "Fencing",
     description: "Durable and attractive fences to define your property.",
     image: "service-fence.jpg",
   },
@@ -44,7 +44,7 @@ const services = [
 
 export default function ServiceCard() {
     return(
-        <div className="flex flex-col w-full gap-8 px-4 md:py-20 md:px-12">
+        <div id="service" className="flex flex-col w-full gap-8 px-4 md:py-20 md:px-12">
 
             <div className="flex flex-col gap-4 md:w-1/2 md:gap-6">
                 <h1 className="text-3xl font-semibold md:text-6xl md:font-bold">Services</h1>

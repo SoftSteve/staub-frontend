@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import ServiceCard from "./ServiceCard";
 import { motion } from 'framer-motion';
 import QuoteLink from "../CustomUi/QuoteLink";
+import ContactMenu from "./ContactMenu";
 
 export default function Home() {
   return (

@@ -20,10 +20,22 @@ export default function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleAbout= () => {
+    setMenuOpen(false);
+    document.getElementById('learn-more')
+    ?.scrollIntoView({behavior:'smooth'});
+  }
+
+  const handleServices = () => {
+    setMenuOpen(false);
+    document.getElementById('service')
+    ?.scrollIntoView({behavior:"smooth"});
+  }
+
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-full h-20 flex justify-between items-center px-6 z-50 transition-colors duration-300 ${
+        className={`fixed top-0 left-0 w-full md:px-40 h-20 flex justify-between items-center px-6 z-50 transition-colors duration-300 ${
           scrolled ? "bg-white" : "bg-transparent"
         }`}
       >
@@ -83,8 +95,8 @@ export default function NavBar() {
             className="fixed top-0 left-0 w-full h-screen bg-white z-40 flex flex-col items-center justify-center space-y-8 text-2xl font-medium text-black"
           >
             <a href="#home" onClick={() => setMenuOpen(false)}>Contact Us</a>
-            <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
-            <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
+            <a href="#about" onClick={handleAbout}>About</a>
+            <a href="#services" onClick={handleServices}>Services</a>
           </motion.div>
         )}
       </AnimatePresence>
