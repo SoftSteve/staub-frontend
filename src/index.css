@@ -9,6 +9,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
 }
 
 code {
@@ -21,8 +22,64 @@ body::-webkit-scrollbar {
 }
 
 html, body {
-      overscroll-behavior: none;
-    }
+  overscroll-behavior: none;
+  scroll-behavior: smooth;
+}
+
+.bg-blueprint {
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(225, 225, 225, 0.4) 0,
+      rgba(225, 225, 225, 0.4) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(225, 225, 225, 0.4) 0,
+      rgba(225, 225, 225, 0.4) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+  background-color: #ffffff;
+
+  background-size: 80px 80px;
+  animation: moveLines 7s linear infinite;
+}
+
+@media only screen and (max-width: 768px) {
+  .bg-blueprint {
+    background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(225, 225, 225, 0.4) 0,
+      rgba(225, 225, 225, 0.4) 1px,
+      transparent 1px,
+      transparent 50px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(225, 225, 225, 0.4) 0,
+      rgba(225, 225, 225, 0.4) 1px,
+      transparent 1px,
+      transparent 50px
+    );
+  background-color: #ffffff;
+
+  background-size: 100px 100px;
+  animation: moveLines 7s linear infinite;
+  }
+}
+
+@keyframes moveLines {
+  0% {
+    background-position: 0 0, 0 0;
+  }
+  100% {
+    background-position: 0px 80px, 0px 80px; 
+  }
+}
 
 
 @keyframes bounce-right {

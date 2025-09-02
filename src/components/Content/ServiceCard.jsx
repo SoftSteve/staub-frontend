@@ -1,93 +1,110 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Autoplay } from "swiper/modules";
-import QuoteLink from "../CustomUi/QuoteLink";
-
-const services = [
-  {
-    title: "Custom Decks",
-    description: "Beautifully crafted decks built to last.",
-    image: "service-deck.jpg",
-  },
-  {
-    title: "Home Additions",
-    description: "Expand your space with seamless, high-quality additions.",
-    image: "service-additions.jpg",
-  },
-  {
-    title: "Sunrooms",
-    description: "Enjoy sunlight year-round with custom-designed sunrooms.",
-    image: "service-sunroom.jpg",
-  },
-  {
-    title: "Basements",
-    description: "Transform your basement into a functional, stylish living area.",
-    image: "service-basement.jpg",
-  },
-  {
-    title: "Kitchens",
-    description: "Modern and efficient kitchens tailored to your lifestyle.",
-    image: "service-kitchen.jpg",
-  },
-  {
-    title: "Fences",
-    description: "Durable and attractive fences to define your property.",
-    image: "service-fence.jpg",
-  },
-  {
-    title: "Roofing",
-    description: "Reliable roofing solutions that protect and enhance your home.",
-    image: "service-roofing.jpg",
-  },
-];
+import { Autoplay, Navigation } from "swiper/modules"; 
+import { useEffect, useState } from "react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { GiTalk } from "react-icons/gi";
+import { motion } from 'framer-motion';
+import { Link, useNavigate } from "react-router-dom";
 
 export default function ServiceCard() {
-    return(
-        <div className="flex flex-col w-full gap-8 px-4 md:py-20 md:px-12">
+  const [services, setServices] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
-            <div className="flex flex-col gap-4 md:w-1/2 md:gap-6">
-                <h1 className="text-3xl font-semibold md:text-6xl md:font-bold">Services</h1>
-                <p className="text-xl text-gray-400 md:text-2xl">Serving Central Pennsylvania, we provide high-quality, professional contracting services. 
-                    From custom decks and fences to full home renovations, our experienced team delivers 
-                    reliable, efficient, and precise work — every project handled with skill and integrity.</p>
-                <QuoteLink/>
-            </div>
-            
-            <section className="">
-                <Swiper
-                    speed={600}
-                    resistance={true}
-                    resistanceRatio={0.1}
-                    modules={[ Autoplay]}
-                    spaceBetween={20}
-                    slidesPerView={1.1}
-                    breakpoints={{
-                    768: { slidesPerView: 3.1 },
-                    }}
-                    autoplay={{ delay: 5000 }}
-                >
-                    {services.map((service, i) => (
-                    <SwiperSlide key={i}>
-                        <div className="relative flex flex-col rounded-xl shadow-md w-full h-[400px] overflow-hidden">
-                        {/* Background image */}
-                        <div
-                            className="absolute inset-0 bg-cover bg-center"
-                            style={{ backgroundImage: `url('${service.image}')` }}
-                        />
-                        {/* Dark overlay */}
-                        <div className="absolute inset-0 bg-black/30" />
-                        {/* Content */}
-                        <div className="relative z-10 flex flex-col justify-end h-full pb-6 px-6 text-white">
-                            <h2 className="text-xl font-bold">{service.title}</h2>
-                            <p className="text-sm mt-2">{service.description}</p>
-                        </div>
-                        </div>
-                    </SwiperSlide>
-                    ))}
-                </Swiper>
-                </section>
-        </div>
-        
-    );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/service-list`);
+        if (!response.ok) {
+          throw new Error(`error status: ${response.status}`);
+        }
+        const result = await response.json();
+        setServices(result);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <section className="relative">
+      <Swiper
+        speed={600}
+        resistance={true}
+        resistanceRatio={0.1}
+        modules={[Navigation, Autoplay]}
+        spaceBetween={20}
+        slidesPerView={1.1}
+        autoplay={{ delay: 5000 }}
+        breakpoints={{
+          768: { slidesPerView: 3.1 },
+        }}
+        onInit={(swiper) => {
+          swiper.params.navigation.prevEl = "#custom-prev-button";
+          swiper.params.navigation.nextEl = "#custom-next-button";
+          swiper.navigation.init();
+          swiper.navigation.update();
+        }}
+      >
+        {services.map((service, i) => (
+          <SwiperSlide className="shadow-md" key={i}>
+            <motion.div
+              onClick={() => navigate('contact')}
+              whileHover="hover"
+              className="relative cursor-pointer flex flex-col rounded-xl shadow-md w-full h-[400px] md:h-[500px] overflow-hidden"
+            >
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url('${API_URL}${service.image}')` }}
+              />
+
+              <motion.div
+                initial={{ x: 150, y:-75, opacity: 0 }}
+                variants={{
+                  hover: { x: 0, y:0, opacity: 1, transition: { duration: 0.4 } },
+                }}
+                className="absolute flex flex-row gap-2 items-center top-10 right-10 bg-blue-500 cursor-pointer rounded-full shadow-md px-3 py-2 z-30"
+              >
+                <Link to='contact' className="text-white text-sm md:text-base font-semibold">
+                  Learn More
+                </Link>
+                <GiTalk className="text-white md:text-2xl"/>
+              </motion.div>
+
+              <div className="absolute inset-0 bg-black/30" />
+
+              <div className="relative z-10 flex flex-col justify-end h-full pb-6 px-6 text-white">
+                <h2 className="text-xl md:text-3xl font-bold">{service.title}</h2>
+                <p className="text-sm md:text-lg mt-2">{service.description}</p>
+              </div>
+            </motion.div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <div className="hidden md:flex absolute inset-y-0 left-0 items-center z-20">
+        <button
+          id="custom-prev-button"
+          className="p-2 bg-white/30 text-white rounded-full hover:bg-black transition"
+        >
+          <IoIosArrowBack size={24} />
+        </button>
+      </div>
+      <div className="hidden md:flex absolute inset-y-0 right-0 items-center z-20">
+        <button
+          id="custom-next-button"
+          className="p-2 bg-white/30 text-white rounded-full hover:bg-black transition"
+        >
+          <IoIosArrowForward size={24} />
+        </button>
+      </div>
+    </section>
+  );
 }
